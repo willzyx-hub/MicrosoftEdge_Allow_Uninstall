@@ -12,7 +12,7 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("MicrosoftEdge_Allow_Uninstall")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ea03066f55c841230c0641273cc94cb0ae55521")]
 [assembly: System.Reflection.AssemblyProductAttribute("MicrosoftEdge_Allow_Uninstall")]
