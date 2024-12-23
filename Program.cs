@@ -1,4 +1,9 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq.Expressions;
+using Microsoft.Win32;
+using Windows.Media.Playback;
 class MicrosoftEdge_Allow_Uninstall
 {
     static void Main(string[] args)
@@ -21,6 +26,10 @@ class MicrosoftEdge_Allow_Uninstall
             case "--execute":
                 ExecuteAction();
                 break;
+
+            case "--force-uninstall":
+                ExecuteUninstall();
+                break;
             
             default:
                 System.Console.WriteLine("Invalid Parameter detected use --help to show some Information");
@@ -34,6 +43,7 @@ class MicrosoftEdge_Allow_Uninstall
         System.Console.WriteLine("  --help      Show help information.");
         System.Console.WriteLine("  --version   Display the version of the program.");
         System.Console.WriteLine("  --execute   Execute the registry change to allow uninstallation of Microsoft Edge.");
+        System.Console.WriteLine("  --force-uninstall  Force Uninstallation of MS Edge if previous Execute parameter doesn't work");
     }
     static void ShowVersionInfo()
     {
@@ -44,8 +54,8 @@ class MicrosoftEdge_Allow_Uninstall
     {
         try
         {
-            string RegistryPath = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge";
-            string RegistryKey = "NoRemove";
+            const string RegistryPath = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge";
+            const string RegistryKey = "NoRemove";
 
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(RegistryPath, writable: true))
             {
@@ -81,6 +91,82 @@ class MicrosoftEdge_Allow_Uninstall
             ShowErrorInfo("Fatal error occurred: " + ex.Message);
         }
     }
+
+    static void ExecuteUninstall()
+    {
+        try
+        {
+            string? SystemDrv = Path.GetPathRoot(Environment.SystemDirectory) ?? @"C:\\"; // Get System Drive Letter and return C:\ as fallback
+            string EdgeVer = GetEdgeVersion();
+            
+
+            if (!string.IsNullOrEmpty(EdgeVer))
+            {
+                Console.WriteLine($"Microsoft Edge Version Detected: {EdgeVer}");
+            }
+            else
+            {
+                Console.WriteLine("Microsoft Edge version could not be detected, It's Possible the file was corrupted");
+            }
+
+            // Combine Full Path of SystemDrv and EdgeVer
+
+            String EdgeProgramPath = Path.Combine(
+                SystemDrv, @"Program Files (x86)\Microsoft\Edge\Application", EdgeVer, @"Installer\setup.exe");
+            Console.WriteLine($"Installation Path: {EdgeProgramPath}");
+
+            // Check if the file exists
+            if (!File.Exists(EdgeProgramPath))
+            {
+                Console.WriteLine($"Setup file not found at: {EdgeProgramPath}");
+                return;
+            }
+            // Create a new process to execute the setup.exe with parameters
+            ProcessStartInfo processInfo = new ProcessStartInfo
+            {
+                FileName = EdgeProgramPath,
+                Arguments = "--uninstall --system-level --verbose-logging --force-uninstall",
+                UseShellExecute = true // UseShellExecute allows elevation prompts if needed
+            };
+
+            Process process = Process.Start(processInfo);
+            if (process == null)
+            {
+                Console.WriteLine("Failed to start the uninstallation process.");
+                return;
+            }
+
+           
+            process.WaitForExit();
+
+            Console.WriteLine("Uninstallation process executed successfully.");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fatal Error Occured: {ex.Message}");
+        }
+    }
+    public static string GetEdgeVersion() // Get Edge version
+    {
+        string EdgeVer = string.Empty;
+        const string EdgeRegKey = @"SOFTWARE\Microsoft\Edge\BLBeacon";
+        const string EdgeRegVal = "version";
+
+        using (RegistryKey key = Registry.CurrentUser.OpenSubKey(EdgeRegKey))
+        {
+            if (key != null)
+            {
+                EdgeVer = key.GetValue(EdgeRegVal)?.ToString();
+            }
+            if (key == null)
+            {
+                System.Console.WriteLine("Microsoft Edge Installation not found !!!");
+            }
+        }
+        return EdgeVer;
+    }
+
     static int GetRegistryValue(RegistryKey key, string RegistryKey)
     {
         object value = key.GetValue(RegistryKey, null);

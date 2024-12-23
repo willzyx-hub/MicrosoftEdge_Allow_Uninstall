@@ -1,7 +1,0 @@
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\MicrosoftEdge_Allow_Uninstall.exe
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\MicrosoftEdge_Allow_Uninstall.dll
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\MicrosoftEdge_Allow_Uninstall.deps.json
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\MicrosoftEdge_Allow_Uninstall.runtimeconfig.json
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\MicrosoftEdge_Allow_Uninstall.pdb
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\Microsoft.Windows.SDK.NET.dll
-C:\Users\CommandX\source\repos\MicrosoftEdge_Allow_Uninstall\bin\Release\net8.0-windows10.0.17763.0\publish\WinRT.Runtime.dll
